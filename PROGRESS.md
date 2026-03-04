@@ -15,12 +15,12 @@
   - [x] API rate limit ve kullanım koşullarını araştır (⚠️ Cache yasağı tespit edildi — Madde 4.1e)
   - [ ] Modpack manifest formatını (manifest.json) detaylıca öğren
 
-- [ ] **0.2 — Mod Uyumluluk & Bağımlılık Araştırması**
-  - [ ] Forge / Fabric / NeoForge / Quilt loader farklarını araştır
-  - [ ] Minecraft sürüm uyumluluk matrisini oluştur
-  - [ ] Mod bağımlılık (dependency) zinciri mantığını incele
-  - [ ] Bilinen mod çakışmalarını (incompatibility) listele ve kaynak bul
-  - [ ] Performans modlarını kategorize et (Sodium, OptiFine, Lithium vb.)
+- [x] **0.2 — Mod Uyumluluk & Bağımlılık Araştırması** → [Araştırma Dokümanı](docs/research/faz0_2_mod_uyumluluk.md)
+  - [x] Forge / Fabric / NeoForge / Quilt loader farklarını araştır
+  - [x] Minecraft sürüm uyumluluk matrisini oluştur
+  - [x] Mod bağımlılık (dependency) zinciri mantığını incele
+  - [x] Bilinen mod çakışmalarını (incompatibility) listele ve kaynak bul
+  - [x] Performans modlarını kategorize et (Sodium, OptiFine, Lithium vb.)
 
 - [ ] **0.3 — FPS ve Performans Tahmin Modeli Araştırması**
   - [ ] Farklı mod kombinasyonlarının performans etkilerini araştır
