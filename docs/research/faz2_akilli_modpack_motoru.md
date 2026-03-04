@@ -86,15 +86,24 @@ Web araştırması sonucu: **Toplulukta standart bir FPS formülü veya puanlama
 
 > Negatif puanlar = FPS artışı (optimizasyon modları)
 
+#### Donanım Profilleri (Referans Sistemler)
+
+Kullanıcıya FPS tahmini gösterirken **iki gerçek fiyat-performans sistemi** üzerinden karşılaştırma yapıyoruz:
+
+| Profil | GPU | CPU (Tipik) | RAM | Vanilla FPS (1080p, 16 chunk) |
+|--------|-----|-------------|-----|-------------------------------|
+| **Sistem A** | RTX 4060 (8GB) | Ryzen 5 5600 / i5-12400 | 16 GB | ~400-700 FPS |
+| **Sistem B** | RTX 5060 (8GB) | Ryzen 7 7800X3D / i7-14700 | 16 GB | ~600-900 FPS |
+
+> Kaynak: YouTube benchmark videoları (2024-2025). MC Java Edition, 1080p, Fancy ayarlar, 16 chunk render distance.
+
 #### FPS Tahmin Formülü
 
 ```
-// Donanım bazlı vanilla FPS değerleri
+// Donanım bazlı vanilla FPS değerleri (MC Java, 1080p, 16 chunk)
 BASE_FPS = {
-  low:    45,    // Eski/zayıf PC (4GB RAM, iGPU)
-  medium: 90,    // Ortalama PC (8GB RAM, GTX 1650)
-  high:   180,   // Güçlü PC (16GB RAM, RTX 3060)
-  ultra:  300    // Enthusiast (32GB RAM, RTX 4080)
+  rtx4060: 500,   // RTX 4060 + Ryzen 5 5600 / i5-12400, 16GB RAM
+  rtx5060: 700    // RTX 5060 + Ryzen 7 7800X3D / i7-14700, 16GB RAM
 }
 
 // Hesaplama
@@ -108,19 +117,43 @@ impact_factor = max(0.1, 1 - (net_cost * 0.035))
 estimated_fps = BASE_FPS[donanım_profili] * impact_factor
 
 // Sonuç aralığı
-min_fps = estimated_fps * 0.6   // Yoğun alanlarda
-avg_fps = estimated_fps          // Ortalama
-max_fps = estimated_fps * 1.3   // Boş alanlarda
+min_fps = estimated_fps * 0.6   // Yoğun alanlarda (mob farm, büyük yapılar)
+avg_fps = estimated_fps          // Normal oynanışta ortalama
+max_fps = estimated_fps * 1.3   // Boş alanlarda (düz arazi)
 ```
 
-#### Benchmark Referans Verileri (Araştırmadan)
+#### Benchmark Referans Verileri (Gerçek Veriye Dayalı)
 
-| Senaryo | Vanilla FPS | + Sodium | + Sodium+Lithium+Starlight | + 50 mod (optimizasyon ile) | + 50 mod (optimizasyon yok) |
-|---------|------------|----------|---------------------------|----------------------------|----------------------------|
-| Orta PC | ~90 | ~200 | ~250 | ~80-120 | ~30-50 |
-| Güçlü PC | ~180 | ~400 | ~500 | ~150-220 | ~60-100 |
+| Senaryo | RTX 4060 | RTX 5060 |
+|---------|----------|----------|
+| **Vanilla (mod yok)** | ~500 FPS | ~700 FPS |
+| **+ Sodium** | ~800 FPS | ~1100 FPS |
+| **+ Sodium + Lithium + Starlight** | ~900 FPS | ~1200 FPS |
+| **+ 30 mod (optimizasyon ile)** | ~200-350 FPS | ~300-450 FPS |
+| **+ 30 mod (optimizasyon yok)** | ~80-150 FPS | ~120-200 FPS |
+| **+ 100 mod (optimizasyon ile)** | ~80-150 FPS | ~120-200 FPS |
+| **+ 100 mod (optimizasyon yok)** | ~25-60 FPS | ~40-80 FPS |
+| **+ Shader (BSL, hafif)** | ~150-200 FPS | ~200-300 FPS |
+| **+ Shader (SEUS PTGI, ağır)** | ~30-50 FPS | ~45-70 FPS |
 
-> Bu değerler YouTube benchmark videolarından derlenmiş yaklaşık değerlerdir.
+> ⚠️ Bu değerler YouTube benchmark'larından derlenmiş **yaklaşık** değerlerdir. Gerçek FPS; MC sürümüne, render distance'a, dünya karmaşıklığına ve mod kombinasyonuna göre değişebilir.
+
+#### Örnek: Kullanıcıya Nasıl Gösterilir?
+
+```
+┌─────────────────────────────────────────────┐
+│  📊 Tahmini FPS (RTX 4060 bazlı)            │
+│                                             │
+│  Modpack: 25 mod | Shader: BSL              │
+│                                             │
+│  ██████████████░░░░░░  ~140 FPS             │
+│  Min: ~85  |  Ort: ~140  |  Maks: ~180      │
+│                                             │
+│  Durum: 🟢 İyi performans                    │
+│                                             │
+│  💡 FerriteCore eklerseniz: ~160 FPS (+14%)  │
+└─────────────────────────────────────────────┘
+```
 
 ### 2.3 Performans Seviye Göstergeleri
 
