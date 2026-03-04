@@ -2,6 +2,8 @@
 
 > **Proje Amacı:** Kullanıcıların bir web arayüzünden Minecraft modlarını seçerek custom modpack oluşturmasını, optimizasyon hatalarını tespit etmesini, tahmini FPS değerlerini görmesini, akıllı mod önerileri almasını ve tek tıkla CurseForge'a aktarmasını sağlayan bir platform.
 
+> ⚠️ **CurseForge API Kısıtlaması:** API Terms (Madde 4.1e) gereği, CurseForge API'den çekilen veriler cache'lenemez veya veritabanına kaydedilemez. Tüm mod verileri her istekte doğrudan API'den çekilmelidir. Sadece kullanıcı tarafından üretilen veriler (modpack, tercihler) veritabanında saklanabilir.
+
 ---
 
 ## Faz 0 — Araştırma & Hazırlık
@@ -10,7 +12,7 @@
   - [ ] CurseForge API (Eternal API) dokümantasyonunu incele
   - [ ] API key başvurusu yap ve erişim al
   - [ ] Mod arama, mod detay çekme, modpack yükleme endpointlerini belirle
-  - [ ] API rate limit ve kullanım koşullarını araştır
+  - [x] API rate limit ve kullanım koşullarını araştır (⚠️ Cache yasağı tespit edildi — Madde 4.1e)
   - [ ] Modpack manifest formatını (manifest.json) detaylıca öğren
 
 - [ ] **0.2 — Mod Uyumluluk & Bağımlılık Araştırması**
@@ -29,8 +31,8 @@
 - [ ] **0.4 — Teknoloji Stack'i Kararı**
   - [ ] Frontend framework seçimi (Next.js / Vite + React)
   - [ ] Backend framework seçimi (Node.js + Express / Fastify / NestJS)
-  - [ ] Veritabanı seçimi (PostgreSQL / MongoDB)
-  - [ ] Cache katmanı (Redis)
+  - [ ] Veritabanı seçimi (PostgreSQL / MongoDB) — sadece kullanıcı verileri için
+  - [ ] ~~Cache katmanı (Redis)~~ → CurseForge API cache yasağı nedeniyle kaldırıldı
   - [ ] Hosting & deployment stratejisi (Vercel, Railway, VPS vb.)
 
 ---
@@ -44,32 +46,26 @@
   - [ ] Environment variables yapısı (.env, config yönetimi)
   - [ ] Logger kurulumu (Winston / Pino)
 
-- [ ] **1.2 — Veritabanı Tasarımı & Modelleri**
+- [ ] **1.2 — Veritabanı Tasarımı & Modelleri** _(Sadece kullanıcı verileri — mod verileri cache'lenemez)_
   - [ ] Veritabanı şemasını tasarla:
-    - [ ] `mods` tablosu (id, curseforge_id, name, slug, description, category, loader, mc_versions, performance_cost, download_count, thumbnail)
-    - [ ] `mod_dependencies` tablosu (mod_id → depends_on_mod_id, dependency_type)
-    - [ ] `mod_incompatibilities` tablosu (mod_a_id ↔ mod_b_id, reason)
-    - [ ] `mod_tags` tablosu (mod_id, tag: optimization / content / visual / utility vb.)
+    - [ ] ~~`mods` tablosu~~ → CurseForge cache yasağı nedeniyle kaldırıldı, mod verileri API'den anlık çekilecek
+    - [ ] `mod_compatibility_rules` tablosu (kendi oluşturduğumuz uyumluluk/çakışma kuralları — CurseForge verisinden bağımsız)
+    - [ ] `mod_performance_scores` tablosu (kendi atadığımız performans puanları — CurseForge verisinden bağımsız)
     - [ ] `modpacks` tablosu (id, user_id, name, mc_version, loader, created_at)
-    - [ ] `modpack_mods` tablosu (modpack_id, mod_id)
+    - [ ] `modpack_mods` tablosu (modpack_id, curseforge_project_id, curseforge_file_id)
     - [ ] `users` tablosu (id, username, email, curseforge_token, created_at)
   - [ ] Migration dosyalarını oluştur
-  - [ ] Seed data hazırla (popüler modların ilk verileri)
+  - [ ] Seed data hazırla (uyumluluk kuralları ve performans puanları)
 
 - [ ] **1.3 — CurseForge API Entegrasyonu (Servis Katmanı)**
   - [ ] CurseForge API client servisi yaz
-  - [ ] Mod arama fonksiyonu (`searchMods`)
-  - [ ] Mod detay çekme fonksiyonu (`getModDetails`)
+  - [ ] Mod arama fonksiyonu (`searchMods`) — her istek direkt API'ye
+  - [ ] Mod detay çekme fonksiyonu (`getModDetails`) — her istek direkt API'ye
   - [ ] Mod dosya/sürüm listeleme fonksiyonu (`getModFiles`)
   - [ ] Kategorilere göre mod listeleme
-  - [ ] API yanıtlarını cache'leme (Redis ile)
+  - [ ] ~~API yanıtlarını cache'leme (Redis ile)~~ → Cache yasağı (Madde 4.1e)
   - [ ] Rate limiting ve hata yönetimi
-
-- [ ] **1.4 — Mod Kataloğu Senkronizasyonu**
-  - [ ] CurseForge'dan popüler modları periyodik çekme (cron job)
-  - [ ] Mod verilerini veritabanına kaydetme/güncelleme
-  - [ ] Mod thumbnail ve asset'leri kaydetme
-  - [ ] Yeni sürüm kontrolü ve güncelleme mekanizması
+  - [ ] API hata fallback mekanizması (timeout, retry, graceful degradation)
 
 ---
 

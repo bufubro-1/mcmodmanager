@@ -13,7 +13,9 @@ Minecraft oyuncularının web üzerinden mod seçerek custom modpack oluşturmas
 
 ## Stack
 
-Frontend (React), Backend (Node.js + TypeScript), PostgreSQL, Redis, CurseForge Eternal API.
+Frontend (React), Backend (Node.js + TypeScript), PostgreSQL, CurseForge Eternal API.
+
+> ⚠️ **API Kısıtlama:** CurseForge API verileri cache'lenemez (Madde 4.1e). Mod verileri her istekte direkt API'den çekilir. DB'de sadece kullanıcı verileri ve kendi oluşturduğumuz kurallar saklanır.
 
 ## Başlamadan Önce
 
